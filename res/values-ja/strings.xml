@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, Login!</string>
+    <string name="app_name">OTOMAGIC</string>
+    <string name="country">jp</string>
+    <string name="data_loading_title">ちょっとまってね</string>
+    <string name="data_loading">ロード中。。。</string>
+    <string name="error">ごめんね</string>
+    <string name="error_json">エラーが発生しました。\nもう一度やり直してください。</string>
+    <style name="common">
+    	<item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#000</item>
+        <item name="android:textSize">28dip</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="config_common">
+    	<item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#000</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+</resources>
