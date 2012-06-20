@@ -4,7 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Itunes {
+public class RequestItunes {
 	public void requestMusicApi(){
 		
 	}

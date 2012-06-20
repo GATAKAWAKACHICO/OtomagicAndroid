@@ -11,24 +11,16 @@
         android:layout_height="50dp"
         android:background="@drawable/background">
 
-        <ImageView
-            android:id="@+id/profile_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icon" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
 
-            <TextView
-                android:id="@+id/friend_name"
-                style="@style/config_common"
+            <ImageView
+                android:id="@+id/profile_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="Loading..."
-                android:textSize="20sp" />
+                android:src="@drawable/icon" />
 
             <CheckBox
                 android:id="@+id/friendSelectCheckBox"
@@ -36,6 +28,16 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true" />
+
+            <TextView
+                android:id="@+id/friend_name"
+                style="@style/config_common"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/friendSelectCheckBox"
+                android:layout_toRightOf="@+id/profile_img"
+                android:text="Loading..."
+                android:textSize="20sp" />
 
         </RelativeLayout>
 

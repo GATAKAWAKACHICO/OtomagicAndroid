@@ -2,7 +2,7 @@
 <resources>
     <string name="hello">Hello World, Login!</string>
     <string name="app_name">OTOMAGIC</string>
-    <string name="country">us</string>
+    <string name="country">ca</string>
     <string name="data_loading_title">Wait a minute</string>
     <string name="data_loading">Data Loading...</string>
     <string name="error_title">Sorry!</string>

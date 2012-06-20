@@ -3,10 +3,19 @@ package jp.bstnhouse.otomagic;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
-
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,6 +34,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ParseException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -41,15 +51,20 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 public class SelectFriend extends Activity{
+	RequestOtomagicData req_otm_data = new RequestOtomagicData();
+	OtmAppConf otm_app_conf = new OtmAppConf();
 	OtmFacebookConf otm_fb_conf = new OtmFacebookConf();
 	Facebook facebook = new Facebook(otm_fb_conf.getOtomagicFacebookId());
 	AsyncFacebookRunner m_facebook_runner = new AsyncFacebookRunner (facebook);
 	private SharedPreferences mPrefs;
 	private String access_token;
+	private String json = null;
+	private DefaultHttpClient client;
+	private HttpEntity entity;
 	private Friend friend;
-	private ImageView profile_imageview;
 	private ProgressDialog prog;
 	private AlertDialog.Builder alertDialog;
 	
@@ -172,7 +187,7 @@ public class SelectFriend extends Activity{
 
 	          //for (int i = 0; i < l; i++)
 	          if (d != null){
-	        	  for (int i = 0; i < 10; i++)
+	        	  for (int i = 0; i < d.length(); i++)
 	        	  {
 	        		  JSONObject o = d.getJSONObject (i);
 
@@ -181,14 +196,9 @@ public class SelectFriend extends Activity{
 	        		  String image_url = "http://graph.facebook.com/"+ id +"/picture";
 	        		  dataList.add(new Friend(id, name, image_url, false));
 	        	  }
-	          
-	        	  SelectFriend.this.runOnUiThread (new Runnable () {
-	        		  public void run ()
-	        		  {
-	        			  adapter.notifyDataSetChanged();
-	        			  prog.dismiss();
-	        		  }
-	        	  });
+	        	  String url = req_otm_data.getUserListRequestUrl(dataList);
+	        	  doOtomagicUserRequest(url);
+	        	  
 	           }else{
 	        	   prog.dismiss();
 	        	   handler.sendEmptyMessage(0);
@@ -198,8 +208,86 @@ public class SelectFriend extends Activity{
 	        {
 	          Log.d ("Facebook", "Friends-Request : JSON Error in response: "+ e);
 	          prog.dismiss();
-	          alertDialog.show();
+	          handler.sendEmptyMessage(0);
 	        }
+		}
+	
+		private void doOtomagicUserRequest(final String url) {
+	    	json = null;
+	        final ResponseHandler<String> response = new ResponseHandler<String>(){
+
+				@Override
+				public String handleResponse(HttpResponse response) throws ClientProtocolException, IOException {
+					// TODO Auto-generated method stub
+					if (response != null && response.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
+						//正常に受信できた場合
+						entity  =  response.getEntity();
+						//InputStream in = entity.getContent();
+						
+						try{
+							json = EntityUtils.toString(entity);
+						}catch (ParseException e){
+							Log.e("ERROR", "ParseException");
+						}finally {
+			                try {
+			                    entity.consumeContent();
+			                }
+			                catch (IOException e) {
+			                    //例外処理
+			                }
+			            }
+						client.getConnectionManager().shutdown();
+						dataList = null;
+						dataList = new ArrayList<Friend>();
+						dataList = req_otm_data.getUserList(json, dataList, getString(R.string.error_no_friend));
+						
+						arrangeDataList();
+					}else{
+						//正常に受信できなかった場合
+						prog.dismiss();
+	                    handler.sendEmptyMessage(0);
+	                    Log.e("OTM",response.getStatusLine().toString());
+					}
+					return null;
+				}
+	 
+	        };
+	 
+	        // 通信の実行
+	        new Thread() {
+	            public void run() {
+	                try{
+	                    client = new DefaultHttpClient();
+	                    HttpGet httpMethod       = new HttpGet(url);
+	                    client.execute(httpMethod,response);
+	                }catch (Exception e) {
+	                    Log.e("ERROR", e.toString());
+	                    prog.dismiss();
+	                    handler.sendEmptyMessage(0);
+	                }
+	                //client.getConnectionManager().shutdown();
+	            }
+	 
+	        }.start(); 
+	    }
+		
+		private void arrangeDataList(){
+			//アルファベット順でソート
+      	  Collections.sort(dataList, new Comparator<Friend>(){
+				@Override
+				public int compare(Friend lhs, Friend rhs) {
+					// TODO Auto-generated method stub
+					return lhs.getName().compareTo(rhs.getName());
+				}
+            });
+
+      	  SelectFriend.this.runOnUiThread (new Runnable () {
+      		  public void run ()
+      		  {
+      			  adapter.notifyDataSetChanged();
+      			  prog.dismiss();
+      		  }
+      	  });
 		}
 		
 		private final Handler handler = new Handler(){
@@ -211,6 +299,7 @@ public class SelectFriend extends Activity{
 		@Override
 		public void onIOException(IOException e, Object state) {
 			// TODO Auto-generated method stub
+			Log.d ("Facebook", "Friends-Request : IO Error in response: "+ e);
 			prog.dismiss();
 	        handler.sendEmptyMessage(0);
 		}
@@ -268,37 +357,55 @@ public class SelectFriend extends Activity{
     		return position;
     	}
     	
+    	public class ViewHolder { 
+    	    TextView textView1;
+    	    ImageView profile_imageview;
+    	    CheckBox checkBox;
+    	}
+    	
     	@Override
     	public View getView(int position, View convertView, ViewGroup parent) {
     		// TODO Auto-generated method stub
-    		TextView textView1;
-    		CheckBox checkBox;
-    		
     	    View v = convertView;
+    	    ViewHolder holder;
 
     	    if(v == null){
     	    	LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     	        v = inflater.inflate(R.layout.friend_row, null);
+    	        
+    	    }else{
+    	    	holder = (ViewHolder) v.getTag();
     	    }
     	    friend = (Friend)getItem(position);
     	    if(friend != null){
+    	    	/*profile_imageview = (ImageView) v.findViewById(R.id.profile_img);
     	    	textView1 = (TextView) v.findViewById(R.id.friend_name);
-    	        textView1.setText(friend.name);
-    	        checkBox = (CheckBox) v.findViewById(R.id.friendSelectCheckBox);
+    	        checkBox = (CheckBox) v.findViewById(R.id.friendSelectCheckBox);*/
+    	    	holder = new ViewHolder();
+    	        holder.profile_imageview = (ImageView) v.findViewById(R.id.profile_img);
+    	        holder.textView1 = (TextView) v.findViewById(R.id.friend_name);
+    	        holder.checkBox = (CheckBox) v.findViewById(R.id.friendSelectCheckBox);
+    	        v.setTag(holder);
+    	    	holder.textView1.setText(friend.name);
     	        final int p = position;
-    	        checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+    	        holder.checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 					@Override
 					public void onCheckedChanged(CompoundButton arg0,
 							boolean isChecked) {
 						// TODO Auto-generated method stub
 						Log.i("MultipleChoiceListActivity", "p=" + String.valueOf(p) + ", isChecked=" + String.valueOf(isChecked));
+						friend = dataList.get(p);
+						friend.check = isChecked;
 						dataList.set(p, friend);
 					}
         		});
-    	        Log.d("dataList.get(position).check.toString():", dataList.get(position).check.toString());
-    	        checkBox.setChecked(dataList.get(position).check);
-    	        profile_imageview = (ImageView) v.findViewById(R.id.profile_img);
-    	        GetFriendImageAsyncTask task = new GetFriendImageAsyncTask (getApplicationContext (), profile_imageview);
+    	        holder.checkBox.setChecked(dataList.get(position).check);
+    	        // 画像を非表示  
+    	        //holder.profile_imageview.setVisibility(View.GONE);
+    	        holder.profile_imageview.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ajax_loader));
+    	        // このタグを AsyncTask で使う。
+    	        holder.profile_imageview.setTag(friend.image_url);
+    	        GetFriendImageAsyncTask task = new GetFriendImageAsyncTask (getApplicationContext (), holder.profile_imageview);
     	        task.execute (friend.image_url);
     	    }
     	    return v;

@@ -1,12 +1,7 @@
 package jp.bstnhouse.otomagic;
 
-import android.app.Activity;
-import android.os.Bundle;
 
-public class OtmAppConf extends Activity{
-	@Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.app_config);
-	}
+public class OtmAppConf{
+	public String OTOMAGIC_API_ROOT_URL = "http://otomagic.me";
+	public String OTOMAGIC_API_USERS_URL = "/users/user_data?";
 }

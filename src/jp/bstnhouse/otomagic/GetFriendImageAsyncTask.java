@@ -10,11 +10,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.view.View;
 import android.widget.ImageView;
 
 public class GetFriendImageAsyncTask extends AsyncTask<String, Void, Bitmap>{
 	private Context m_context;
 	private ImageView m_image_view;
+	private String m_tag;
 	//AsyncTaskでprogressDialogを作ると落ちる
 	//private ProgressDialog m_progress;
 
@@ -22,6 +24,8 @@ public class GetFriendImageAsyncTask extends AsyncTask<String, Void, Bitmap>{
 	{
 	    this.m_context = context;
 	    this.m_image_view = image;
+	    // ImageView に設定したタグをメンバへ  
+        this.m_tag = m_image_view.getTag().toString(); 
 	}
 	@Override
     protected void onPreExecute ()
@@ -69,8 +73,14 @@ public class GetFriendImageAsyncTask extends AsyncTask<String, Void, Bitmap>{
     {
       // 処理中ダイアログをクローズ
       //m_progress.dismiss();
-
-      m_image_view.setImageBitmap (result);
+		// メンバのタグと imageView にセットしたタグが一致すれば  
+        // 画像をセットする 
+        if (this.m_tag.equals(this.m_image_view.getTag())) {  
+            if (result != null) {  
+                this.m_image_view.setImageBitmap(result);  
+                this.m_image_view.setVisibility(View.VISIBLE);  
+            }  
+        }
     }
 
 }

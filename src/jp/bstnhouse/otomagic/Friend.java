@@ -13,19 +13,19 @@ public class Friend {
 	    this.check = false;
 	}
 	  
-	public String getname(){
+	public String getName(){
 		return name;
 	}
 	  
-	public String getid(){
+	public String getId(){
 	   return id;
 	}
 	  
-	public String getimage_url(){
+	public String getImage_url(){
 	   return image_url;
 	}
 	
-	public Boolean getcheck(){
+	public Boolean getCheck(){
 		   return check;
 	}
 	  

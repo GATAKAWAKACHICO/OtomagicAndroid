@@ -43,7 +43,7 @@ public class OtmPlayer extends Activity implements OnClickListener{
 	private TextView like_user_name;
 	private ImageView artist_imageview;
 	private ProgressDialog prog;
-	Itunes itunes = new Itunes();
+	RequestItunes itunes = new RequestItunes();
 	private String json = null;
 	private String image_url;
 	private String artistName;
@@ -88,12 +88,14 @@ public class OtmPlayer extends Activity implements OnClickListener{
 				mp.reset();
 				mp.release();
 				Log.d("MediaPlayer:", "終了");
+				
         	}
         	doRequest();
         	break;
         case R.id.back_button:
         	if(mp.isPlaying()){
         		mp.seekTo(0);
+        		Log.d("Language:", getString(R.string.country));
         	}
         	break;
         }
@@ -189,6 +191,7 @@ public class OtmPlayer extends Activity implements OnClickListener{
 					//mp.reset();
 					//mp.release();
 					Log.d("MediaPlayer:", "終了");
+					doRequest();
 				}
             });
         }
@@ -256,7 +259,7 @@ public class OtmPlayer extends Activity implements OnClickListener{
             public void run() {
                 try{
                     client = new DefaultHttpClient();
-                    HttpGet httpMethod       = new HttpGet("http://itunes.apple.com/search?term=放課後ティータイム&country=jp");
+                    HttpGet httpMethod       = new HttpGet("http://itunes.apple.com/search?term=放課後ティータイム&country=" + getString(R.string.country));
                     client.execute(httpMethod,response);
                 }catch (Exception e) {
                     Log.e("ERROR", e.toString());
