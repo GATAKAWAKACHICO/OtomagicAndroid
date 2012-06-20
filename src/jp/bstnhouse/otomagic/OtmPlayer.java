@@ -42,6 +42,9 @@ public class OtmPlayer extends Activity implements OnClickListener{
 	private TextView song_title_name;
 	private TextView like_user_name;
 	private ImageView artist_imageview;
+	private Button back_btn;
+	private Button next_btn;
+	private Button play_stop_btn;
 	private ProgressDialog prog;
 	RequestItunes itunes = new RequestItunes();
 	private String json = null;
@@ -66,8 +69,13 @@ public class OtmPlayer extends Activity implements OnClickListener{
         artist_name = (TextView) findViewById(R.id.artistNameTextView);
         song_title_name = (TextView) findViewById(R.id.songTitleTextView);
         like_user_name = (TextView) findViewById(R.id.likeUserNameTextView);
-        findViewById(R.id.next_button).setOnClickListener(this);
-        findViewById(R.id.back_button).setOnClickListener(this);
+
+        back_btn = (Button) findViewById(R.id.back_button);
+        back_btn.setOnClickListener(this);
+        next_btn = (Button) findViewById(R.id.next_button);
+        next_btn.setOnClickListener(this);
+        play_stop_btn = (Button) findViewById(R.id.play_stop_button);
+        play_stop_btn.setOnClickListener(this);
         
         adView = new AdView(this, AdSize.BANNER, otm_admob.getOtomagicAdmobId());
         LinearLayout layout = (LinearLayout)findViewById(R.id.AdLayout);
@@ -96,6 +104,37 @@ public class OtmPlayer extends Activity implements OnClickListener{
         	if(mp.isPlaying()){
         		mp.seekTo(0);
         		Log.d("Language:", getString(R.string.country));
+        	}else if(!mp.isPlaying()){
+        		try {
+					mp.prepare();
+					mp.start();
+					mp.seekTo(0);
+					play_stop_btn.setText("stop");
+				} catch (IllegalStateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        	}
+        	break;
+        case R.id.play_stop_button:
+        	if(mp.isPlaying()){
+        		mp.stop();
+        		play_stop_btn.setText("play");
+        	}else{
+        		try {
+					mp.prepare();
+					mp.start();
+					play_stop_btn.setText("stop");
+				} catch (IllegalStateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
         	}
         	break;
         }
@@ -104,9 +143,9 @@ public class OtmPlayer extends Activity implements OnClickListener{
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if(mp.isPlaying()){
+		/*if(mp.isPlaying()){
 			mp.stop();
-		}
+		}*/
 		Toast.makeText(this, "onPause", Toast.LENGTH_SHORT).show();
 	}
 	

@@ -80,8 +80,15 @@ public class SelectFriend extends Activity{
         
         Button play_btn = (Button) findViewById(R.id.play_button);
         listView = (ListView)findViewById(R.id.friendListView);
+        
+        //ArrayAdapter初期化
         setAdapters();
-        facebookAccessTokenCheck();
+        //facebookのアクセストークン取得
+        getFacebookAccessTokenFromSharedPr();
+        
+        dataList = new ArrayList<Friend>();
+        this.prog = ProgressDialog.show(this, getString(R.string.data_loading_title), getString(R.string.data_loading));
+        
         play_btn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
@@ -107,68 +114,52 @@ public class SelectFriend extends Activity{
         });
     }
     
-    public void facebookAccessTokenCheck(){
+    private void getFacebookAccessTokenFromSharedPr(){
     	mPrefs = getPreferences(MODE_PRIVATE);
         access_token = mPrefs.getString("access_token", null);
         long expires = mPrefs.getLong("access_expires", 0);
         if(access_token != null) {
             facebook.setAccessToken(access_token);
-            Log.d("token:", "アクセストークンある！");
-            dataList = new ArrayList<Friend>();
-            this.prog = ProgressDialog.show(this, getString(R.string.data_loading_title), getString(R.string.data_loading));
             m_facebook_runner.request ("/me/friends", new FriendsRequestListener());
-        }else{
-        	Log.d("token:", "アクセストークンないんかい！");
         }
+        
         if(expires != 0) {
             facebook.setAccessExpires(expires);
         }
         
-        facebookLoginCheck();
-    }
-    
-	public void facebookLoginCheck(){
-		/*
+        /*
          * Only call authorize if the access_token has expired.
          */
         if(!facebook.isSessionValid()) {
-        	otomagicLoginWithFacebook();
-        }else{
-        	
+
+            facebook.authorize(this, new String[] {}, new DialogListener() {
+                @Override
+                public void onComplete(Bundle values) {
+                    SharedPreferences.Editor editor = mPrefs.edit();
+                    editor.putString("access_token", facebook.getAccessToken());
+                    editor.putLong("access_expires", facebook.getAccessExpires());
+                    editor.commit();
+                    m_facebook_runner.request ("/me/friends", new FriendsRequestListener());
+                }
+    
+                @Override
+                public void onFacebookError(FacebookError error) {}
+    
+                @Override
+                public void onError(DialogError e) {}
+    
+                @Override
+                public void onCancel() {}
+            });
         }
-	}
-	
-	@Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		/* facebookアプリが端末にインストールされているとこのメソッドに飛ぶ */
-        super.onActivityResult(requestCode, resultCode, data);
-        facebook.authorizeCallback(requestCode, resultCode, data);
-        dataList = new ArrayList<Friend>();
-		m_facebook_runner.request ("/me/friends", new FriendsRequestListener());
     }
-	
-	private void otomagicLoginWithFacebook(){
-		/*facebook SDKにてログイン*/
-		facebook.authorize(SelectFriend.this, new String[] {}, new DialogListener() {
-    		public void onComplete(Bundle values) {
-    			SharedPreferences.Editor editor = mPrefs.edit();
-                editor.putString("access_token", facebook.getAccessToken());
-                editor.putLong("access_expires", facebook.getAccessExpires());
-                editor.commit();
-                Log.d("token:", "アクセストークンを取得" + values);
-                dataList = null;
-    		}
+    
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-    		@Override
-    		public void onFacebookError(FacebookError error) {}
-
-    		@Override
-    		public void onError(DialogError e) {}
-
-    		@Override
-    		public void onCancel() {}
-    	});
-	}
+        facebook.authorizeCallback(requestCode, resultCode, data);
+    }
     
 	public class FriendsRequestListener implements com.facebook.android.AsyncFacebookRunner.RequestListener
 	{
@@ -196,7 +187,17 @@ public class SelectFriend extends Activity{
 	        		  String image_url = "http://graph.facebook.com/"+ id +"/picture";
 	        		  dataList.add(new Friend(id, name, image_url, false));
 	        	  }
+	        	  //リストにユーザー自身を追加
+	        	  mPrefs = getSharedPreferences("ME",MODE_PRIVATE);
+	        	  String me_id = mPrefs.getString("me_id", null);
+	        	  String me_name = mPrefs.getString("me_name", null);
+	        	  String image_url = "http://graph.facebook.com/"+ me_id +"/picture";
+	        	  dataList.add(new Friend(me_id, me_name, image_url, false));
+	        	  Log.d("me",me_name);
+	        	  
+	        	  //OTOMAGICサーバにユーザーを問い合わせるためのURL作成
 	        	  String url = req_otm_data.getUserListRequestUrl(dataList);
+	        	  //上で作ったURLからユーザー問い合わせリクエスト送信
 	        	  doOtomagicUserRequest(url);
 	        	  
 	           }else{
@@ -402,7 +403,7 @@ public class SelectFriend extends Activity{
     	        holder.checkBox.setChecked(dataList.get(position).check);
     	        // 画像を非表示  
     	        //holder.profile_imageview.setVisibility(View.GONE);
-    	        holder.profile_imageview.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ajax_loader));
+    	        holder.profile_imageview.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.user_icon_def));
     	        // このタグを AsyncTask で使う。
     	        holder.profile_imageview.setTag(friend.image_url);
     	        GetFriendImageAsyncTask task = new GetFriendImageAsyncTask (getApplicationContext (), holder.profile_imageview);

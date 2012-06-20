@@ -1,8 +1,5 @@
 package jp.bstnhouse.otomagic;
 
-import com.facebook.android.AsyncFacebookRunner;
-import com.facebook.android.Facebook;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,9 +9,6 @@ import android.widget.Button;
 
 public class Home extends Activity {
     /** Called when the activity is first created. */
-	OtmFacebookConf otm_fb_conf = new OtmFacebookConf();
-	Facebook facebook = new Facebook(otm_fb_conf.getOtomagicFacebookId());
-	AsyncFacebookRunner m_facebook_runner = new AsyncFacebookRunner (facebook);
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {

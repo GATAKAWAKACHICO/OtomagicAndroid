@@ -15,6 +15,15 @@
         <RelativeLayout android:id="@+id/relativeLayout1" android:layout_height="wrap_content" android:layout_width="match_parent">
             <Button android:layout_width="wrap_content" android:text="back" android:id="@+id/back_button" android:layout_height="wrap_content" android:layout_alignParentTop="true" android:layout_alignParentLeft="true"></Button>
             <Button android:layout_width="wrap_content" android:text="next" android:id="@+id/next_button" android:layout_height="wrap_content" android:layout_alignParentTop="true" android:layout_alignParentRight="true"></Button>
+
+            <Button
+                android:id="@+id/play_stop_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:text="stop" />
+
         </RelativeLayout>
     </LinearLayout>
 

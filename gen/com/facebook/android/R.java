@@ -25,7 +25,8 @@ public final class R {
         public static final int otomagic_disclogo=0x7f02000b;
         public static final int otomagic_disclogo_hdpi=0x7f02000c;
         public static final int otomagiclogo=0x7f02000d;
-        public static final int wrench2_gr=0x7f02000e;
+        public static final int user_icon_def=0x7f02000e;
+        public static final int wrench2_gr=0x7f02000f;
     }
     public static final class id {
         public static final int AdLayout=0x7f06000c;
@@ -34,7 +35,7 @@ public final class R {
         public static final int back_button=0x7f060014;
         public static final int controllerLayout=0x7f060012;
         public static final int discImageView=0x7f06000d;
-        public static final int friendListView=0x7f060017;
+        public static final int friendListView=0x7f060018;
         public static final int friendSelectCheckBox=0x7f060006;
         public static final int friend_name=0x7f060007;
         public static final int imageView1=0x7f060008;
@@ -43,9 +44,10 @@ public final class R {
         public static final int linearLayout1=0x7f060009;
         public static final int listView1=0x7f060002;
         public static final int next_button=0x7f060015;
-        public static final int play_button=0x7f060018;
+        public static final int play_button=0x7f060019;
+        public static final int play_stop_button=0x7f060016;
         public static final int profile_img=0x7f060005;
-        public static final int profile_img_sub=0x7f060016;
+        public static final int profile_img_sub=0x7f060017;
         public static final int radioButton1=0x7f060004;
         public static final int relativeLayout1=0x7f060013;
         public static final int songTitleTextView=0x7f060010;
