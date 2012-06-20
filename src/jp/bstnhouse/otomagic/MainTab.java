@@ -39,9 +39,9 @@ public class MainTab extends TabActivity{
 	    tabHost.addTab(spec);  
 	  
 	    // Do the same for the other tabs  
-	    intent = new Intent().setClass(this, OtmAppConf.class);  
+	    intent = new Intent().setClass(this, Config.class);  
 	    spec = tabHost.newTabSpec("Config")  
-	                  .setIndicator("Config",   
+	                  .setIndicator(getString(R.string.config),   
 	                   res.getDrawable(R.drawable.wrench2_gr))  
 	                  .setContent(intent);  
 	    tabHost.addTab(spec);  

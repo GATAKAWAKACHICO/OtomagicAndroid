@@ -21,5 +21,6 @@
         <activity android:name="SelectFriend"></activity>
         <activity android:name="OtmAppConf"></activity>
         <activity android:name="MainTab"></activity>
+        <activity android:name="Config"></activity>
     </application>
 </manifest>

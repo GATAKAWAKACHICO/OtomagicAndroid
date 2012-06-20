@@ -114,6 +114,11 @@ public class Splash extends Activity {
 	          editor.putString("me_name", me_name);
 	          editor.commit();
 	          Log.d("•Û‘¶",me_name);
+	          mPrefs = getSharedPreferences("Config",MODE_PRIVATE);
+	          boolean play_background_flg = mPrefs.getBoolean("config_play_background", true);
+	          SharedPreferences.Editor editor2 = mPrefs.edit();
+	          editor2.putBoolean("config_play_background", play_background_flg);
+	          editor2.commit();
 	        }
 	        catch (JSONException e)
 	        {

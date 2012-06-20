@@ -15,8 +15,12 @@ import org.apache.http.util.EntityUtils;
 import com.google.ads.AdSize;
 import com.google.ads.AdView;
 
+import android.R.drawable;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
@@ -28,6 +32,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -45,6 +50,7 @@ public class OtmPlayer extends Activity implements OnClickListener{
 	private Button back_btn;
 	private Button next_btn;
 	private Button play_stop_btn;
+	private AlertDialog.Builder alertDialog;
 	private ProgressDialog prog;
 	RequestItunes itunes = new RequestItunes();
 	private String json = null;
@@ -81,7 +87,42 @@ public class OtmPlayer extends Activity implements OnClickListener{
         LinearLayout layout = (LinearLayout)findViewById(R.id.AdLayout);
         otm_admob.getTestAdView(adView, layout);
         
+        alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setTitle(getString(R.string.warn_title));
+        alertDialog.setMessage(getString(R.string.ask_finish));
+        alertDialog.setIcon(drawable.stat_notify_error);
+        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				// TODO Auto-generated method stub
+				Intent i = new Intent(getApplication(), SelectFriend.class);
+				startActivity(i);
+				OtmPlayer.this.finish();
+			}
+        });
+        
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				// TODO Auto-generated method stub
+
+			}
+        });
+        
         doRequest();
+	}
+	
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent event) {
+	    if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+	        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+	            // Ç±Ç±Ç≈èàóù
+	        	alertDialog.show();
+	            return true;
+	        }
+	    }
+
+	    return false;
 	}
 	
 	@Override
@@ -96,7 +137,7 @@ public class OtmPlayer extends Activity implements OnClickListener{
 				mp.reset();
 				mp.release();
 				Log.d("MediaPlayer:", "èIóπ");
-				
+				back_btn.setEnabled(true);
         	}
         	doRequest();
         	break;
@@ -104,30 +145,19 @@ public class OtmPlayer extends Activity implements OnClickListener{
         	if(mp.isPlaying()){
         		mp.seekTo(0);
         		Log.d("Language:", getString(R.string.country));
-        	}else if(!mp.isPlaying()){
-        		try {
-					mp.prepare();
-					mp.start();
-					mp.seekTo(0);
-					play_stop_btn.setText("stop");
-				} catch (IllegalStateException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
         	}
         	break;
         case R.id.play_stop_button:
         	if(mp.isPlaying()){
         		mp.stop();
         		play_stop_btn.setText("play");
+        		back_btn.setEnabled(false);
         	}else{
         		try {
 					mp.prepare();
 					mp.start();
 					play_stop_btn.setText("stop");
+					back_btn.setEnabled(true);
 				} catch (IllegalStateException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -146,13 +176,13 @@ public class OtmPlayer extends Activity implements OnClickListener{
 		/*if(mp.isPlaying()){
 			mp.stop();
 		}*/
-		Toast.makeText(this, "onPause", Toast.LENGTH_SHORT).show();
+		//Toast.makeText(this, "onPause", Toast.LENGTH_SHORT).show();
 	}
 	
 	@Override
 	protected void onStop() {
 		super.onStop();
-		Toast.makeText(this, "onStop", Toast.LENGTH_SHORT).show();
+		//Toast.makeText(this, "onStop", Toast.LENGTH_SHORT).show();
 	}
 	
 	@Override
@@ -170,7 +200,7 @@ public class OtmPlayer extends Activity implements OnClickListener{
 				e.printStackTrace();
 			}
 		}
-		Toast.makeText(this, "onRestart", Toast.LENGTH_SHORT).show();
+		//Toast.makeText(this, "onRestart", Toast.LENGTH_SHORT).show();
 	}
 	
 	@Override

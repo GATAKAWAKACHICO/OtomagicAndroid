@@ -5,11 +5,39 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:background="@drawable/background" android:weightSum="1">
-    <ImageView android:src="@drawable/icon" android:id="@+id/discImageView" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_gravity="center" android:layout_marginTop="30dip"></ImageView>
+
+    <LinearLayout
+        android:id="@+id/AdLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+    <ImageView android:src="@drawable/otomagic_disclogo_hdpi" android:id="@+id/discImageView" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_gravity="center" android:layout_marginTop="30dip"></ImageView>
     <LinearLayout android:id="@+id/InformationLayout" android:layout_height="wrap_content" android:layout_width="match_parent" android:layout_weight="0.24" android:orientation="vertical">
-        <TextView style="@style/common" android:text="Unkown Artist" android:id="@+id/artistNameTextView" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-        <TextView style="@style/common" android:text="Unkown Title" android:id="@+id/songTitleTextView" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-        <TextView style="@style/common" android:text="Unkown Like" android:id="@+id/likeUserNameTextView" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+        <TextView style="@style/music_player_common" android:text="Loading Artist" android:id="@+id/artistNameTextView" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+        <TextView style="@style/music_player_common" android:text="Loading Title" android:id="@+id/songTitleTextView" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/likeUserNameTextView"
+                style="@style/music_player_common"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="Loading Like User" />
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/heart" />
+
+        </LinearLayout>
+
     </LinearLayout>
     <LinearLayout android:id="@+id/controllerLayout" android:layout_height="wrap_content" android:layout_width="match_parent" android:layout_weight="0.24" android:orientation="vertical">
         <RelativeLayout android:id="@+id/relativeLayout1" android:layout_height="wrap_content" android:layout_width="match_parent">
@@ -25,15 +53,6 @@
                 android:text="stop" />
 
         </RelativeLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/AdLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:orientation="vertical" >
-
     </LinearLayout>
     
 </LinearLayout>

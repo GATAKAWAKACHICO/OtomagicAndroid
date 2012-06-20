@@ -8,11 +8,24 @@
     <string name="error_title">ごめんね</string>
     <string name="error_json">エラーが発生しました。\nもう一度やり直してください。</string>
     <string name="error_no_friend">友達がまだOTOMAGICを始めていません。</string>
+    <string name="error_no_check">友達を選択してください。\nチェックをしても友達に通知されたりすることはありません。</string>
+    <string name="warn_title">確認</string>
+    <string name="ask_finish">再生を終了しますか？</string>
+    <string name="config">設定</string>
+    <string name="config_background">バックグラウンドで再生する</string>
+    <string name="config_reflect_ask">設定を反映しますか？</string>
     <style name="common">
     	<item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">#000</item>
         <item name="android:textSize">28dip</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="music_player_common">
+    	<item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#000</item>
+        <item name="android:textSize">20dip</item>
         <item name="android:textStyle">bold</item>
     </style>
     <style name="config_common">

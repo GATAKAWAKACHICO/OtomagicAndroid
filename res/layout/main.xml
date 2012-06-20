@@ -6,11 +6,15 @@
     android:background="@drawable/background"
     >
     <ImageView android:id="@+id/imageView1" android:layout_height="100dip" android:src="@drawable/otomagic_disclogo" android:layout_width="100dip" android:layout_gravity="center" android:layout_marginTop="120dip"></ImageView>
-    <LinearLayout android:id="@+id/linearLayout1" android:layout_height="wrap_content" android:layout_width="match_parent" android:orientation="vertical">
-        <ImageView android:src="@drawable/icon" android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/imageView2"></ImageView>
-        <TextView android:layout_height="wrap_content" android:text="Unkown" style="@style/common" android:id="@+id/textView1" android:layout_width="wrap_content"></TextView>
-    </LinearLayout>
-    <Button android:id="@+id/start_button" android:layout_height="wrap_content" android:text="Start" android:layout_gravity="center" android:layout_width="wrap_content"></Button>
+
+    <Button
+        android:id="@+id/start_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        android:text="Start" >
+</Button>
 
     <LinearLayout
         android:id="@+id/AdLayout"

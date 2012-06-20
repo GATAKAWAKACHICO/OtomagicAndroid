@@ -51,6 +51,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 public class SelectFriend extends Activity{
@@ -59,6 +60,7 @@ public class SelectFriend extends Activity{
 	OtmFacebookConf otm_fb_conf = new OtmFacebookConf();
 	Facebook facebook = new Facebook(otm_fb_conf.getOtomagicFacebookId());
 	AsyncFacebookRunner m_facebook_runner = new AsyncFacebookRunner (facebook);
+	private Button play_btn;
 	private SharedPreferences mPrefs;
 	private String access_token;
 	private String json = null;
@@ -67,8 +69,10 @@ public class SelectFriend extends Activity{
 	private Friend friend;
 	private ProgressDialog prog;
 	private AlertDialog.Builder alertDialog;
+	private AlertDialog.Builder alertDialog2;
 	
 	static List<Friend> dataList = new ArrayList<Friend>();
+	static List<Friend> checkedDataList;
 	static FriendAdapter adapter;
 	ListView listView;
 	
@@ -78,7 +82,7 @@ public class SelectFriend extends Activity{
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.select_friend);
         
-        Button play_btn = (Button) findViewById(R.id.play_button);
+        final Button play_btn = (Button) findViewById(R.id.play_button);
         listView = (ListView)findViewById(R.id.friendListView);
         
         //ArrayAdapterèâä˙âª
@@ -93,8 +97,25 @@ public class SelectFriend extends Activity{
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				Intent i = new Intent(getApplication(), OtmPlayer.class);
-				startActivity(i);
+				checkedDataList = null;
+				checkedDataList = new ArrayList<Friend>();
+				play_btn.setEnabled(false);
+				boolean checked;
+				for (int i = 0; i < dataList.size(); i++){
+					checked = dataList.get(i).check;
+					if (checked){
+						checkedDataList.add(new Friend(dataList.get(i).id, dataList.get(i).name, dataList.get(i).image_url, true));
+					}
+				}
+				if(checkedDataList.size() == 0){
+					play_btn.setEnabled(true);
+					alertDialog2.show();
+				}else{
+					Log.d("checked",checkedDataList.toString());
+					Intent i = new Intent(getApplication(), OtmPlayer.class);
+					startActivity(i);
+					SelectFriend.this.finish();
+				}
 			}
         });
         
@@ -102,18 +123,45 @@ public class SelectFriend extends Activity{
         alertDialog.setTitle(getString(R.string.error_title));
         alertDialog.setMessage(getString(R.string.error_json));
         alertDialog.setIcon(drawable.stat_notify_error);
-        
         alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface arg0, int arg1) {
 				// TODO Auto-generated method stub
 				Intent i = new Intent(getApplication(), MainTab.class);
 				startActivity(i);
-				SelectFriend.this.finish();
+				//SelectFriend.this.finish();
+			}
+        });
+        
+        alertDialog2 = new AlertDialog.Builder(this);
+        alertDialog2.setTitle(getString(R.string.error_title));
+        alertDialog2.setMessage(getString(R.string.error_no_check));
+        alertDialog2.setIcon(drawable.stat_notify_error);
+        alertDialog2.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				// TODO Auto-generated method stub
+				
 			}
         });
     }
     
+	 @Override
+	 public void onPause(){
+	  super.onPause();
+	            
+	 }
+	 
+	 @Override
+	 protected void onRestart() {
+    	super.onRestart();
+	 }
+	 
+	 @Override
+	 protected void onResume() {
+	  super.onResume();
+	 }
+	 
     private void getFacebookAccessTokenFromSharedPr(){
     	mPrefs = getPreferences(MODE_PRIVATE);
         access_token = mPrefs.getString("access_token", null);
@@ -157,7 +205,6 @@ public class SelectFriend extends Activity{
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         facebook.authorizeCallback(requestCode, resultCode, data);
     }
     
