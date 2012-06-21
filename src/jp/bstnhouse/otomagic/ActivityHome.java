@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 
-public class Home extends Activity {
+public class ActivityHome extends Activity {
     /** Called when the activity is first created. */
 	
     @Override
@@ -21,7 +21,7 @@ public class Home extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				Intent i = new Intent(getApplication(), SelectFriend.class);
+				Intent i = new Intent(getApplication(), ActivitySelectFriend.class);
 				startActivity(i);
 			}
         });

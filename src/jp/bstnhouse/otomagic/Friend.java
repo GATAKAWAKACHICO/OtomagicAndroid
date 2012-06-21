@@ -1,6 +1,6 @@
 package jp.bstnhouse.otomagic;
 
-public class Friend {
+public class Friend{
 	String id;
 	String name;
 	String image_url;

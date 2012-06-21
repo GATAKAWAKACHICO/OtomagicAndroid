@@ -28,7 +28,7 @@ public class MainTab extends TabActivity{
 	  
 	    // Create an Intent to launch an Activity   
 	    // for the tab (to be reused)  
-	    intent = new Intent().setClass(this, Home.class);  
+	    intent = new Intent().setClass(this, ActivityHome.class);  
 	  
 	    // Initialize a TabSpec for each tab and   
 	    // add it to the TabHost  
@@ -39,7 +39,7 @@ public class MainTab extends TabActivity{
 	    tabHost.addTab(spec);  
 	  
 	    // Do the same for the other tabs  
-	    intent = new Intent().setClass(this, Config.class);  
+	    intent = new Intent().setClass(this, ActivityConfig.class);  
 	    spec = tabHost.newTabSpec("Config")  
 	                  .setIndicator(getString(R.string.config),   
 	                   res.getDrawable(R.drawable.wrench2_gr))  

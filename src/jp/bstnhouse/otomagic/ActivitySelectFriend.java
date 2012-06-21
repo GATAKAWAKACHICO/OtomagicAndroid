@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -34,6 +35,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import android.database.sqlite.SQLiteStatement;
 import android.net.ParseException;
 import android.os.Bundle;
 import android.os.Handler;
@@ -54,10 +58,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
-public class SelectFriend extends Activity{
+public class ActivitySelectFriend extends Activity{
 	RequestOtomagicData req_otm_data = new RequestOtomagicData();
-	OtmAppConf otm_app_conf = new OtmAppConf();
-	OtmFacebookConf otm_fb_conf = new OtmFacebookConf();
+	ConfOtmApp otm_app_conf = new ConfOtmApp();
+	ConfFacebook otm_fb_conf = new ConfFacebook();
 	Facebook facebook = new Facebook(otm_fb_conf.getOtomagicFacebookId());
 	AsyncFacebookRunner m_facebook_runner = new AsyncFacebookRunner (facebook);
 	private Button play_btn;
@@ -67,12 +71,15 @@ public class SelectFriend extends Activity{
 	private DefaultHttpClient client;
 	private HttpEntity entity;
 	private Friend friend;
+	private SQLiteDatabase db;
+	private SubOpenHelper helper;
+	ExecutorService execService;
 	private ProgressDialog prog;
 	private AlertDialog.Builder alertDialog;
 	private AlertDialog.Builder alertDialog2;
 	
 	static List<Friend> dataList = new ArrayList<Friend>();
-	static List<Friend> checkedDataList;
+	static List<Friend> checkedDataList = new ArrayList<Friend>();;
 	static FriendAdapter adapter;
 	ListView listView;
 	
@@ -99,7 +106,7 @@ public class SelectFriend extends Activity{
 				// TODO Auto-generated method stub
 				checkedDataList = null;
 				checkedDataList = new ArrayList<Friend>();
-				play_btn.setEnabled(false);
+				//play_btn.setEnabled(false);
 				boolean checked;
 				for (int i = 0; i < dataList.size(); i++){
 					checked = dataList.get(i).check;
@@ -112,9 +119,8 @@ public class SelectFriend extends Activity{
 					alertDialog2.show();
 				}else{
 					Log.d("checked",checkedDataList.toString());
-					Intent i = new Intent(getApplication(), OtmPlayer.class);
-					startActivity(i);
-					SelectFriend.this.finish();
+					prog.show();
+					SaveCheckedDataAllTransaction();
 				}
 			}
         });
@@ -146,21 +152,88 @@ public class SelectFriend extends Activity{
         });
     }
     
-	 @Override
-	 public void onPause(){
-	  super.onPause();
-	            
-	 }
-	 
-	 @Override
-	 protected void onRestart() {
+    //エラー時にAlertDialogを表示させるためのHandler
+    private final Handler handler = new Handler(){
+		public void handleMessage(Message msg) {
+			alertDialog.show();
+		}
+	};
+	
+    //DBにチェックされたユーザを保存するためのハンドラ
+    private Handler mhandler = new Handler() {
+        public void handleMessage(Message msg){
+        	saveCheckedDataToDB();
+            prog.dismiss();
+        }
+    };
+    
+    protected void saveCheckedDataToDB() {
+    	Intent i = new Intent(getApplication(), ActivityOtmPlayer.class);
+    	helper = new SubOpenHelper(getApplicationContext(),"checkedDataList.db",null, 1);
+    	SQLiteStatement stmt;
+		try{
+			//DBを開く(書き込みモード)
+			db = helper.getWritableDatabase();
+			//以前にチェックされたユーザのデータを破棄（レコードの削除）
+			db.delete("checked_data_list", "", null);
+			
+			try{
+				db.beginTransaction();
+				stmt = db.compileStatement("INSERT INTO checked_data_list(facebook_id, name) VALUES(?, ?);");
+				Log.d("stmt","INSERT INTO checked_data_list(facebook_id, name) VALUES(?, ?);");
+				for (int j = 0; j < checkedDataList.size(); j++){
+					stmt.bindString(1, checkedDataList.get(j).id);
+					stmt.bindString(2, checkedDataList.get(j).name);
+					stmt.executeInsert();
+					Log.d("データ","挿入");
+				}
+				db.setTransactionSuccessful();
+				Log.d("DB保存","完了");
+				startActivity(i);
+			}catch(Exception e){
+				Log.e("SQLiteException",e.toString());
+				db.close();
+		        handler.sendEmptyMessage(0);
+			}finally {
+			    db.endTransaction();
+			    db.close();
+			}
+		}catch(SQLiteException e){
+			Log.e("SQLiteException",e.toString());
+			db.close();
+	        handler.sendEmptyMessage(0);
+		}
+    }
+    
+    public void SaveCheckedDataAllTransaction(){
+    	new Thread() {
+            public void run() {
+                try{
+                	//ロード中の表示
+                	mhandler.sendEmptyMessage(0);
+                }catch (Exception e) {
+                    Log.e("ERROR", e.toString());
+                    prog.dismiss();
+                    handler.sendEmptyMessage(0);
+                }
+            }
+        }.start();  	
+    }
+    
+    @Override
+    public void onPause(){
+    	super.onPause();
+	}
+    
+    @Override
+    protected void onRestart() {
     	super.onRestart();
-	 }
+	}
 	 
-	 @Override
-	 protected void onResume() {
+	@Override
+	protected void onResume() {
 	  super.onResume();
-	 }
+	}
 	 
     private void getFacebookAccessTokenFromSharedPr(){
     	mPrefs = getPreferences(MODE_PRIVATE);
@@ -207,7 +280,7 @@ public class SelectFriend extends Activity{
         super.onActivityResult(requestCode, resultCode, data);
         facebook.authorizeCallback(requestCode, resultCode, data);
     }
-    
+	
 	public class FriendsRequestListener implements com.facebook.android.AsyncFacebookRunner.RequestListener
 	{
 		@Override
@@ -259,7 +332,8 @@ public class SelectFriend extends Activity{
 	          handler.sendEmptyMessage(0);
 	        }
 		}
-	
+		
+		//OTOMAGICサーバにユーザーを問い合わせる
 		private void doOtomagicUserRequest(final String url) {
 	    	json = null;
 	        final ResponseHandler<String> response = new ResponseHandler<String>(){
@@ -329,7 +403,7 @@ public class SelectFriend extends Activity{
 				}
             });
 
-      	  SelectFriend.this.runOnUiThread (new Runnable () {
+      	  ActivitySelectFriend.this.runOnUiThread (new Runnable () {
       		  public void run ()
       		  {
       			  adapter.notifyDataSetChanged();
@@ -337,12 +411,6 @@ public class SelectFriend extends Activity{
       		  }
       	  });
 		}
-		
-		private final Handler handler = new Handler(){
-			public void handleMessage(Message msg) {
-				alertDialog.show();
-			}
-		};
 
 		@Override
 		public void onIOException(IOException e, Object state) {

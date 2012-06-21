@@ -21,8 +21,8 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.Window;
 
-public class Splash extends Activity {
-	OtmFacebookConf otm_fb_conf = new OtmFacebookConf();
+public class ActivitySplash extends Activity {
+	ConfFacebook otm_fb_conf = new ConfFacebook();
 	Facebook facebook = new Facebook(otm_fb_conf.getOtomagicFacebookId());
 	AsyncFacebookRunner m_facebook_runner = new AsyncFacebookRunner (facebook);
 	private SharedPreferences mPrefs;
@@ -59,7 +59,7 @@ public class Splash extends Activity {
 	         */
 	        if(!facebook.isSessionValid()) {
 	        	/*facebook SDKÇ…ÇƒÉçÉOÉCÉì*/
-	    		facebook.authorize(Splash.this, new String[] {}, new DialogListener() {
+	    		facebook.authorize(ActivitySplash.this, new String[] {}, new DialogListener() {
 	        		public void onComplete(Bundle values) {
 	        			SharedPreferences.Editor editor = mPrefs.edit();
 	                    editor.putString("access_token", facebook.getAccessToken());
@@ -156,6 +156,6 @@ public class Splash extends Activity {
 		/* HomeâÊñ Ç…à⁄ìÆ */
 		Intent i = new Intent(getApplication(), MainTab.class);
 		startActivity(i);
-		Splash.this.finish();
+		ActivitySplash.this.finish();
 	}
 }

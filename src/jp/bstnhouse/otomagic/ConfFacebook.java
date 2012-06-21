@@ -10,7 +10,7 @@ import com.facebook.android.Facebook;
 import com.facebook.android.FacebookError;
 import com.facebook.android.Facebook.DialogListener;
 
-public class OtmFacebookConf {
+public class ConfFacebook {
 	private String OTOMAGIC_FACEBOOK_APP_ID = "301955646531244";
 	Facebook facebook;
 	

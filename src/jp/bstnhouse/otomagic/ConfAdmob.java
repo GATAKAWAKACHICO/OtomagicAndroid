@@ -7,7 +7,7 @@ import com.google.ads.AdRequest;
 import com.google.ads.AdSize;
 import com.google.ads.AdView;
 
-public class OtmAdmobConf extends Activity{
+public class ConfAdmob extends Activity{
 	private AdView adView;
 	private String OTOMAGIC_ADMOB_ID = "a14fd957c8b53d2";
 	

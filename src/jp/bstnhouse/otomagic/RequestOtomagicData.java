@@ -8,7 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class RequestOtomagicData {
-	private OtmAppConf otm_app_conf = new OtmAppConf();
+	private ConfOtmApp otm_app_conf = new ConfOtmApp();
 	static List<Friend> tmpDataList = new ArrayList<Friend>();
 	
 	public String getUserListRequestUrl(List<Friend> dataList){

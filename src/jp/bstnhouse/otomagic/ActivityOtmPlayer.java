@@ -20,14 +20,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.net.ParseException;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -40,9 +38,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-public class OtmPlayer extends Activity implements OnClickListener{
+public class ActivityOtmPlayer extends Activity implements OnClickListener{
 	private TextView artist_name;
 	private TextView song_title_name;
 	private TextView like_user_name;
@@ -64,7 +61,7 @@ public class OtmPlayer extends Activity implements OnClickListener{
 	private String preview_url;
 	private int resNum = 0;
 	private AdView adView;
-	OtmAdmobConf otm_admob = new OtmAdmobConf();
+	ConfAdmob otm_admob = new ConfAdmob();
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -95,9 +92,9 @@ public class OtmPlayer extends Activity implements OnClickListener{
 			@Override
 			public void onClick(DialogInterface arg0, int arg1) {
 				// TODO Auto-generated method stub
-				Intent i = new Intent(getApplication(), SelectFriend.class);
-				startActivity(i);
-				OtmPlayer.this.finish();
+				//Intent i = new Intent(getApplication(), SelectFriend.class);
+				//startActivity(i);
+				ActivityOtmPlayer.this.finish();
 			}
         });
         
@@ -212,7 +209,7 @@ public class OtmPlayer extends Activity implements OnClickListener{
 			mp.release();
 			Log.d("MediaPlayer:", "èIóπ");
     	}
-		Toast.makeText(this, "onDestory", Toast.LENGTH_SHORT).show();
+		//Toast.makeText(this, "onDestory", Toast.LENGTH_SHORT).show();
 	}
 	
 	private final Handler handler = new Handler(){	 

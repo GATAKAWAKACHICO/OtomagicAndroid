@@ -14,7 +14,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-public class Config extends Activity{
+public class ActivityConfig extends Activity{
 	private AlertDialog.Builder alertDialog;
 	private SharedPreferences mPrefs;
 	@Override
