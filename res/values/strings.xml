@@ -3,14 +3,31 @@
     <string name="hello">Hello World, Login!</string>
     <string name="app_name">OTOMAGIC</string>
     <string name="country">us</string>
+    <string name="warn_login_with_facebook">OTOMAGIC needs Facebook Account.</string>
+    <string name="download_facebook_app">Download facebook app.</string>
     <string name="data_loading_title">Wait a minute</string>
-    <string name="data_loading">Data Loading...</string>
+    <string name="data_loading">Loading Data...</string>
+    <string name="data_loading_user_friends">Loading Friends Data...</string>
+    <string name="data_loading_music">Loading Music Data...\nIt may take a lot of time by when music start.</string>
     <string name="error_title">Sorry!</string>
     <string name="error_json">An Error Occured.\nPlese go back and restart.</string>
     <string name="error_no_friend">Your Friend dif not play OTOMAGIC yet.</string>
-    <string name="error_no_check">Please chose your friend.\neven if you check, this app does not be notified to your friend.</string>
+    <string name="error_no_check">Please choose your friend.\neven if you check, this app does not be notified to your friend.</string>
+    <string name="error_over_check">You can choose within four friend.</string>
+    <string name="user_like">" likes this."</string>
+    <string name="see_on_itunes">See this song on itunes.</string>
+    <string name="arrangelist_load">Loading PlayList...</string>
+    <string name="arrangelist_title">Scheduled next songs</string>
     <string name="warn_title">Confirm</string>
     <string name="ask_finish">Do you really want to quit?</string>
+    <string name="home">Home</string>
+    <string name="howto">How to</string>
+    <string name="howto_introduction">OTOMAGIC is a Facebook application. \nYou can listen to FRIEND\'S FAVORITE ARTIST\'S MUSIC and YOUR FAVORITE ARTIST\'S MUSIC.
+        \nThis app use Facebook graph information. so if you want to change or update your favorite artists, please use the following instructions.</string>
+    <string name="howto_explanation1">1. At first, in your profile page, please click your likes.</string>
+    <string name="howto_explanation2">2. Next, push edit button.</string>
+    <string name="howto_explanation3">3. At Last, please input your favorite artist.</string>
+    <string name="howto_conclusion">that\'s all to enjoy OTOMAGIC!</string>
     <string name="config">Configure</string>
     <string name="config_background">Play in Background</string>
     <string name="config_reflect_ask">Do you want to reflect the settings?</string>
@@ -34,4 +51,7 @@
         <item name="android:textColor">#000</item>
         <item name="android:textStyle">bold</item>
     </style>
+    <style name="otomagic_checkbox" parent="android:Widget.CompoundButton.CheckBox">
+		<item name="android:button">@drawable/selector_checkbox</item>
+	</style>
 </resources>

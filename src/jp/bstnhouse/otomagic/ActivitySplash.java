@@ -13,9 +13,13 @@ import com.facebook.android.Facebook;
 import com.facebook.android.FacebookError;
 import com.facebook.android.Facebook.DialogListener;
 
+import android.R.drawable;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -26,14 +30,37 @@ public class ActivitySplash extends Activity {
 	Facebook facebook = new Facebook(otm_fb_conf.getOtomagicFacebookId());
 	AsyncFacebookRunner m_facebook_runner = new AsyncFacebookRunner (facebook);
 	private SharedPreferences mPrefs;
-	private String me;
 	private String access_token;
+	private AlertDialog.Builder alertDialog;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.splash);
+        
+        alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setTitle(getString(R.string.error_title));
+        alertDialog.setMessage(getString(R.string.warn_login_with_facebook));
+        alertDialog.setIcon(drawable.stat_notify_error);
+        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				// TODO Auto-generated method stub
+				
+			}
+        });
+        
+        alertDialog.setNegativeButton(getString(R.string.download_facebook_app), new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				// TODO Auto-generated method stub
+				Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=com.facebook.katana");
+	        	Intent i = new Intent(Intent.ACTION_VIEW,uri);
+	        	startActivity(i);
+			}
+        });
+        
         Handler hdl = new Handler();
 		hdl.postDelayed(new splashHandler(), 1000);
     }
@@ -59,7 +86,7 @@ public class ActivitySplash extends Activity {
 	         */
 	        if(!facebook.isSessionValid()) {
 	        	/*facebook SDKÇ…ÇƒÉçÉOÉCÉì*/
-	    		facebook.authorize(ActivitySplash.this, new String[] {}, new DialogListener() {
+	    		facebook.authorize(ActivitySplash.this, new String[] {"publish_stream", "email", "user_about_me", "friends_about_me", "user_interests", "friends_interests", "user_likes", "friends_likes"}, new DialogListener() {
 	        		public void onComplete(Bundle values) {
 	        			SharedPreferences.Editor editor = mPrefs.edit();
 	                    editor.putString("access_token", facebook.getAccessToken());
@@ -77,7 +104,9 @@ public class ActivitySplash extends Activity {
 	        		public void onError(DialogError e) {}
 
 	        		@Override
-	        		public void onCancel() {}
+	        		public void onCancel() {
+	        			alertDialog.show();
+	        		}
 	        	});
 	        }else{
 	        	goToHomeActivity();
@@ -108,17 +137,14 @@ public class ActivitySplash extends Activity {
 	          //JSONObject json_name = json.getJSONObject("name");
 	          String me_id = json.getString ("id");
 	          String me_name = json.getString ("name");
+	          String me_gender = json.getString("gender");
 	          mPrefs = getSharedPreferences("ME", MODE_PRIVATE);
 	          SharedPreferences.Editor editor = mPrefs.edit();
 	          editor.putString("me_id", me_id);
 	          editor.putString("me_name", me_name);
+	          editor.putString("me_gender", me_gender);
 	          editor.commit();
-	          Log.d("ï€ë∂",me_name);
-	          mPrefs = getSharedPreferences("Config",MODE_PRIVATE);
-	          boolean play_background_flg = mPrefs.getBoolean("config_play_background", true);
-	          SharedPreferences.Editor editor2 = mPrefs.edit();
-	          editor2.putBoolean("config_play_background", play_background_flg);
-	          editor2.commit();
+	          Log.d("ï€ë∂",me_name + ":" + me_gender);
 	        }
 	        catch (JSONException e)
 	        {
@@ -154,7 +180,7 @@ public class ActivitySplash extends Activity {
 	
 	private void goToHomeActivity(){
 		/* HomeâÊñ Ç…à⁄ìÆ */
-		Intent i = new Intent(getApplication(), MainTab.class);
+		Intent i = new Intent(getApplication(), ActivityMainTab.class);
 		startActivity(i);
 		ActivitySplash.this.finish();
 	}

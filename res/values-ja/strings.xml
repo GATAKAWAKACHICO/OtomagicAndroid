@@ -3,14 +3,31 @@
     <string name="hello">Hello World, Login!</string>
     <string name="app_name">OTOMAGIC</string>
     <string name="country">jp</string>
-    <string name="data_loading_title">ちょっとまってね</string>
+    <string name="warn_login_with_facebook">OTOMAGICはFacebookアカウントでログインが必要です。</string>
+    <string name="download_facebook_app">Facebookのアプリをダウンロードする</string>
+    <string name="data_loading_title">お待ちください</string>
     <string name="data_loading">ロード中。。。</string>
+    <string name="data_loading_user_friends">友達データ取得中。。。</string>
+    <string name="data_loading_music">楽曲データ取得中。。。\n再生まで時間がかかることがあります。</string>
     <string name="error_title">ごめんね</string>
     <string name="error_json">エラーが発生しました。\nもう一度やり直してください。</string>
     <string name="error_no_friend">友達がまだOTOMAGICを始めていません。</string>
     <string name="error_no_check">友達を選択してください。\nチェックをしても友達に通知されたりすることはありません。</string>
+    <string name="error_over_check">友達は４人まで選ぶことができます。</string>
+    <string name="user_like">のお気に入り！</string>
+    <string name="see_on_itunes">iTunesでこの曲をみる</string>
+    <string name="arrangelist_load">プレイリストを作成中。。。</string>
+    <string name="arrangelist_title">次の曲以降のスケジュール</string>
     <string name="warn_title">確認</string>
     <string name="ask_finish">再生を終了しますか？</string>
+    <string name="home">ホーム</string>
+    <string name="howto">使い方</string>
+    <string name="howto_introduction">OTOMAGICは、Facebookと連携したアプリケーションです。\nOTOMAGICは、あなたの友達がFacebookでいいね！した曲や、あなたがFacebookでいいね！したアーティストの曲を自動再生します。
+        \nそのため、OTOMAGICではFacebookの情報が基準となります。もしあなたの好きなアーティストに変更がある場合には、下記の手順にしたがってFacebookのプロフィール情報を更新してください。</string>
+    <string name="howto_explanation1">1. まず最初に、あなたのプロフィールのページに飛び、自分のいいね！をクリックします。</string>
+    <string name="howto_explanation2">2. 次に、画面右の編集ボタンをクリックします。</string>
+    <string name="howto_explanation3">3. 音楽のテキストボックスに好きなアーティストを入力して、編集を終了ボタンをクリックします。</string>
+    <string name="howto_conclusion">以上で変更が反映されます！引き続きOTOMAGICをお楽しみください。</string>
     <string name="config">設定</string>
     <string name="config_background">バックグラウンドで再生する</string>
     <string name="config_reflect_ask">設定を反映しますか？</string>
@@ -34,4 +51,7 @@
         <item name="android:textColor">#000</item>
         <item name="android:textStyle">bold</item>
     </style>
+    <style name="otomagic_checkbox" parent="android:Widget.CompoundButton.CheckBox">
+		<item name="android:button">@drawable/selector_checkbox</item>
+	</style>
 </resources>

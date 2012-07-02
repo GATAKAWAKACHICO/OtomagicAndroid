@@ -2,47 +2,122 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
-    android:background="@drawable/background">
+    android:background="@drawable/background"
+    android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/howtoTitle"
+        style="@style/config_common"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/config"
-        android:textAppearance="?android:attr/textAppearanceLarge" 
-        style="@style/config_common"/>
+        android:text="@string/howto"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/config_background"
-        android:textAppearance="?android:attr/textAppearanceMedium" 
-        style="@style/config_common"/>
-	<RadioGroup android:id="@+id/play_background_radiogroup"
+    <LinearLayout
+        android:id="@+id/ImageViewZoomInLayout"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-    <RadioButton
-        android:id="@+id/play_background_on"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="On"
-        style="@style/config_common"/>
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:background="#55000000"
+        android:visibility="gone">
+        
+		<Button
+		    android:id="@+id/ImageViewZoomInLayoutCloseButton"
+		    style="?android:attr/buttonStyleSmall"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="right"
+		    android:background="@drawable/button_delete_blue"
+		    android:text="" />
 
-    <RadioButton
-        android:id="@+id/play_background_off"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Off" 
-        style="@style/config_common"/>
-    </RadioGroup>
+		<HorizontalScrollView
+		    android:id="@+id/horizontalScrollView1"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content" >
 
-    <Button
-        android:id="@+id/reflect_button"
+			<ScrollView
+			    android:id="@+id/scrollView1"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content" >
+
+			    <ImageView
+			        android:id="@+id/imageViewZoomin"
+			        android:layout_width="1000dp"
+			        android:layout_height="1000dp"
+			        android:src="@drawable/screen1_en" />
+			</ScrollView>
+
+		</HorizontalScrollView>
+
+        </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/howtoScrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.85" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+            
+                <TextView
+        android:id="@+id/howtoIntroTextView"
+        style="@style/config_common"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Button" />
+        android:text="@string/howto_introduction" />
+
+                <ImageView
+                    android:id="@+id/facebookImageView1"
+                    android:layout_width="374dp"
+                    android:layout_height="365dp"
+                    android:src="@drawable/screen1_en" />
+                
+                <TextView
+        			android:id="@+id/howtoExplanationTextView1"
+        			style="@style/config_common"
+        			android:layout_width="wrap_content"
+        			android:layout_height="wrap_content"
+        			android:text="@string/howto_explanation1" />
+
+                <ImageView
+                    android:id="@+id/facebookImageView2"
+                    android:layout_width="374dp"
+                    android:layout_height="365dp"
+                    android:src="@drawable/screen2_en" />
+                
+                <TextView
+        			android:id="@+id/howtoExplanationTextView2"
+        			style="@style/config_common"
+        			android:layout_width="wrap_content"
+        			android:layout_height="wrap_content"
+        			android:text="@string/howto_explanation2" />
+                
+                <ImageView
+                    android:id="@+id/facebookImageView3"
+                    android:layout_width="374dp"
+                    android:layout_height="365dp"
+                    android:src="@drawable/screen3_en" />
+                
+                <TextView
+        			android:id="@+id/howtoExplanationTextView3"
+        			style="@style/config_common"
+        			android:layout_width="wrap_content"
+        			android:layout_height="wrap_content"
+        			android:text="@string/howto_explanation3" />
+                
+                <TextView
+        			android:id="@+id/howtoConclusionTextView"
+        			style="@style/config_common"
+        			android:layout_width="wrap_content"
+        			android:layout_height="wrap_content"
+        			android:text="@string/howto_conclusion" />
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>

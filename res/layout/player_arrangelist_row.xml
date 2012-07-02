@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="64dip"
+    android:gravity="center_vertical"
+    android:ignoreGravity="@+id/icon" 
+    android:background="@drawable/background">
+
+    <TextView
+        android:id="@+id/song_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_centerVertical="true"
+        android:ellipsize="marquee"
+        android:paddingLeft="9dip"
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Loading"
+        style="@style/config_common"
+        />
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/grabber" />
+
+    <TextView
+        android:id="@+id/artist_label"
+        style="@style/config_common"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/song_label"
+        android:text="Loading" />
+
+</RelativeLayout>

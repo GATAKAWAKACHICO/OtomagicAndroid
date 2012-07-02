@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+	<!-- (1) -->
+	<item
+		android:state_checked="true"
+		android:state_pressed="true"
+		android:drawable="@drawable/checkbox_yes" />
+	<!-- (2) -->
+	<item
+		android:state_checked="true"
+		android:drawable="@drawable/checkbox_yes" />
+	<!-- (3) -->
+	<item
+		android:state_checked="false"
+		android:state_pressed="true"
+		android:drawable="@drawable/checkbox_no" />
+	<!-- (4) -->
+	<item
+		android:state_checked="false"
+		android:drawable="@drawable/checkbox_no" />
+</selector>

@@ -6,53 +6,153 @@
   android:layout_height="match_parent"
   android:background="@drawable/background" android:weightSum="1">
 
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.85" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/discImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="30dip"
+                android:src="@drawable/otomagic_disclogo_hdpi" />
+
+            <LinearLayout
+                android:id="@+id/InformationLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.24"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/artistNameTextView"
+                    style="@style/music_player_common"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Loading Artist" />
+
+                <TextView
+                    android:id="@+id/songTitleTextView"
+                    style="@style/music_player_common"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Loading Title" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/likeUserNameTextView"
+                        style="@style/music_player_common"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="Loading Like User" />
+
+                    <ImageView
+                        android:id="@+id/imageView1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/heart" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/controllerLayout"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginBottom="30dp"
+                android:layout_marginTop="30dp"
+                android:layout_weight="0.24"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayout1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <Button
+                        android:id="@+id/back_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft="30dp"
+                        android:background="@drawable/selector_back_btn" />
+
+                    <Button
+                        android:id="@+id/next_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginRight="30dp"
+                        android:background="@drawable/selector_next_btn" />
+
+                    <Button
+                        android:id="@+id/play_stop_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/stop_btn_normal" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ToolLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <Button
+                        android:id="@+id/see_itunes_button"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:background="@drawable/itunes_icon" />
+
+                    <TextView
+                        android:id="@+id/see_itunes_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="2dp"
+                        android:layout_toRightOf="@+id/see_itunes_button"
+                        android:text="@string/see_on_itunes"
+                        android:textColor="#000000" />
+                </RelativeLayout>
+
+                <Button
+                    android:id="@+id/arrange_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="arrange playlist" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
     <LinearLayout
         android:id="@+id/AdLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         android:orientation="vertical" >
-    </LinearLayout>
 
-    <ImageView android:src="@drawable/otomagic_disclogo_hdpi" android:id="@+id/discImageView" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_gravity="center" android:layout_marginTop="30dip"></ImageView>
-    <LinearLayout android:id="@+id/InformationLayout" android:layout_height="wrap_content" android:layout_width="match_parent" android:layout_weight="0.24" android:orientation="vertical">
-        <TextView style="@style/music_player_common" android:text="Loading Artist" android:id="@+id/artistNameTextView" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-        <TextView style="@style/music_player_common" android:text="Loading Title" android:id="@+id/songTitleTextView" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                android:id="@+id/likeUserNameTextView"
-                style="@style/music_player_common"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:text="Loading Like User" />
-
-            <ImageView
-                android:id="@+id/imageView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/heart" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-    <LinearLayout android:id="@+id/controllerLayout" android:layout_height="wrap_content" android:layout_width="match_parent" android:layout_weight="0.24" android:orientation="vertical">
-        <RelativeLayout android:id="@+id/relativeLayout1" android:layout_height="wrap_content" android:layout_width="match_parent">
-            <Button android:layout_width="wrap_content" android:text="back" android:id="@+id/back_button" android:layout_height="wrap_content" android:layout_alignParentTop="true" android:layout_alignParentLeft="true"></Button>
-            <Button android:layout_width="wrap_content" android:text="next" android:id="@+id/next_button" android:layout_height="wrap_content" android:layout_alignParentTop="true" android:layout_alignParentRight="true"></Button>
-
-            <Button
-                android:id="@+id/play_stop_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:text="stop" />
-
-        </RelativeLayout>
     </LinearLayout>
     
 </LinearLayout>

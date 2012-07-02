@@ -3,7 +3,8 @@
       package="jp.bstnhouse.otomagic"
       android:versionCode="1"
       android:versionName="1.0">
-    <uses-sdk android:minSdkVersion="8" />
+    <uses-sdk android:minSdkVersion="8" 
+        android:targetSdkVersion="15"/>
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
@@ -19,7 +20,15 @@
         <activity android:name=".ActivityOtmPlayer"></activity>
         <activity android:name="com.google.ads.AdActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
         <activity android:name=".ActivitySelectFriend"></activity>
-        <activity android:name="MainTab"></activity>
+        <activity android:name=".ActivityMainTab"></activity>
         <activity android:name=".ActivityConfig"></activity>
+        <activity android:name="ActivityPlayerArrangeList"></activity>
+        <!-- Used for install referrer tracking -->
+    	<receiver android:name="com.google.android.apps.analytics.AnalyticsReceiver"
+              android:exported="true">
+      		<intent-filter>
+        		<action android:name="com.android.vending.INSTALL_REFERRER" />
+      		</intent-filter>
+    	</receiver>
     </application>
 </manifest>

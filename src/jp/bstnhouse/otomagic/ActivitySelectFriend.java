@@ -26,6 +26,7 @@ import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
 import com.facebook.android.FacebookError;
 import com.facebook.android.Facebook.DialogListener;
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 import android.R.drawable;
 import android.app.Activity;
@@ -55,8 +56,6 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ViewFlipper;
 
 public class ActivitySelectFriend extends Activity{
 	RequestOtomagicData req_otm_data = new RequestOtomagicData();
@@ -64,7 +63,6 @@ public class ActivitySelectFriend extends Activity{
 	ConfFacebook otm_fb_conf = new ConfFacebook();
 	Facebook facebook = new Facebook(otm_fb_conf.getOtomagicFacebookId());
 	AsyncFacebookRunner m_facebook_runner = new AsyncFacebookRunner (facebook);
-	private Button play_btn;
 	private SharedPreferences mPrefs;
 	private String access_token;
 	private String json = null;
@@ -72,16 +70,22 @@ public class ActivitySelectFriend extends Activity{
 	private HttpEntity entity;
 	private Friend friend;
 	private SQLiteDatabase db;
-	private SubOpenHelper helper;
+	private SQLiteCheckedDataListOpenHelper helper;
 	ExecutorService execService;
 	private ProgressDialog prog;
 	private AlertDialog.Builder alertDialog;
 	private AlertDialog.Builder alertDialog2;
+	private AlertDialog.Builder alertDialog3;
 	
 	static List<Friend> dataList = new ArrayList<Friend>();
-	static List<Friend> checkedDataList = new ArrayList<Friend>();;
+	static List<Friend> tmpDataList = new ArrayList<Friend>();
+	static List<Friend> tmpDataList_ = new ArrayList<Friend>();
+	static List<Friend> checkedDataList = new ArrayList<Friend>();
 	static FriendAdapter adapter;
 	ListView listView;
+	
+	GoogleAnalyticsTracker tracker;
+	ConfAnalytics conf_ana = new ConfAnalytics();
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,12 +96,16 @@ public class ActivitySelectFriend extends Activity{
         final Button play_btn = (Button) findViewById(R.id.play_button);
         listView = (ListView)findViewById(R.id.friendListView);
         
+        tracker = GoogleAnalyticsTracker.getInstance();
+        tracker.startNewSession(conf_ana.OTOMAGIC_ANALITICS_UA, this);
+        
         //ArrayAdapter初期化
         setAdapters();
         //facebookのアクセストークン取得
         getFacebookAccessTokenFromSharedPr();
         
         dataList = new ArrayList<Friend>();
+        new ProgressDialog(this);
         this.prog = ProgressDialog.show(this, getString(R.string.data_loading_title), getString(R.string.data_loading));
         
         play_btn.setOnClickListener(new View.OnClickListener() {
@@ -117,14 +125,23 @@ public class ActivitySelectFriend extends Activity{
 				if(checkedDataList.size() == 0){
 					play_btn.setEnabled(true);
 					alertDialog2.show();
+				}else if(checkedDataList.size() > 4){
+					play_btn.setEnabled(true);
+					alertDialog3.show();
 				}else{
 					Log.d("checked",checkedDataList.toString());
+					tracker.trackEvent(
+				            "Clicks",  // Category
+				            "Button",  // Action
+				            "buttonToOtmPlayer", // Label
+				            77);       // Value
 					prog.show();
 					SaveCheckedDataAllTransaction();
 				}
 			}
         });
         
+        //電波がない場合などのエラーを示すアラートダイアログ
         alertDialog = new AlertDialog.Builder(this);
         alertDialog.setTitle(getString(R.string.error_title));
         alertDialog.setMessage(getString(R.string.error_json));
@@ -133,12 +150,18 @@ public class ActivitySelectFriend extends Activity{
 			@Override
 			public void onClick(DialogInterface arg0, int arg1) {
 				// TODO Auto-generated method stub
-				Intent i = new Intent(getApplication(), MainTab.class);
+				tracker.trackEvent(
+			            "Errors",  // Category
+			            "Button",  // Action
+			            "SelectFriendErrorDialog", // Label
+			            77);       // Value
+				Intent i = new Intent(getApplication(), ActivityMainTab.class);
 				startActivity(i);
-				//SelectFriend.this.finish();
+				ActivitySelectFriend.this.finish();
 			}
         });
         
+        //チェックが入っていない場合のアラートダイアログ
         alertDialog2 = new AlertDialog.Builder(this);
         alertDialog2.setTitle(getString(R.string.error_title));
         alertDialog2.setMessage(getString(R.string.error_no_check));
@@ -147,7 +170,18 @@ public class ActivitySelectFriend extends Activity{
 			@Override
 			public void onClick(DialogInterface arg0, int arg1) {
 				// TODO Auto-generated method stub
-				
+			}
+        });
+        
+        //チェックが入りすぎている場合のアラートダイアログ
+        alertDialog3 = new AlertDialog.Builder(this);
+        alertDialog3.setTitle(getString(R.string.error_title));
+        alertDialog3.setMessage(getString(R.string.error_over_check));
+        alertDialog3.setIcon(drawable.stat_notify_error);
+        alertDialog3.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				// TODO Auto-generated method stub
 			}
         });
     }
@@ -162,14 +196,14 @@ public class ActivitySelectFriend extends Activity{
     //DBにチェックされたユーザを保存するためのハンドラ
     private Handler mhandler = new Handler() {
         public void handleMessage(Message msg){
-        	saveCheckedDataToDB();
             prog.dismiss();
+            Intent i = new Intent(getApplication(), ActivityOtmPlayer.class);
+            startActivity(i);
         }
     };
     
     protected void saveCheckedDataToDB() {
-    	Intent i = new Intent(getApplication(), ActivityOtmPlayer.class);
-    	helper = new SubOpenHelper(getApplicationContext(),"checkedDataList.db",null, 1);
+    	helper = new SQLiteCheckedDataListOpenHelper(getApplicationContext(),"checkedDataList.db",null, 1);
     	SQLiteStatement stmt;
 		try{
 			//DBを開く(書き込みモード)
@@ -189,7 +223,8 @@ public class ActivitySelectFriend extends Activity{
 				}
 				db.setTransactionSuccessful();
 				Log.d("DB保存","完了");
-				startActivity(i);
+				mhandler.sendEmptyMessage(0);
+				//startActivity(i);
 			}catch(Exception e){
 				Log.e("SQLiteException",e.toString());
 				db.close();
@@ -208,6 +243,8 @@ public class ActivitySelectFriend extends Activity{
     public void SaveCheckedDataAllTransaction(){
     	new Thread() {
             public void run() {
+            	saveCheckedDataToDB();
+            	/*
                 try{
                 	//ロード中の表示
                 	mhandler.sendEmptyMessage(0);
@@ -215,7 +252,7 @@ public class ActivitySelectFriend extends Activity{
                     Log.e("ERROR", e.toString());
                     prog.dismiss();
                     handler.sendEmptyMessage(0);
-                }
+                }*/
             }
         }.start();  	
     }
@@ -223,6 +260,7 @@ public class ActivitySelectFriend extends Activity{
     @Override
     public void onPause(){
     	super.onPause();
+    	tracker.dispatch();
 	}
     
     @Override
@@ -234,7 +272,14 @@ public class ActivitySelectFriend extends Activity{
 	protected void onResume() {
 	  super.onResume();
 	}
-	 
+	
+	@Override
+    protected void onDestroy() {
+      super.onDestroy();
+      // Stop the tracker when it is no longer needed.
+      tracker.stopSession();
+    }
+	
     private void getFacebookAccessTokenFromSharedPr(){
     	mPrefs = getPreferences(MODE_PRIVATE);
         access_token = mPrefs.getString("access_token", null);
@@ -253,7 +298,7 @@ public class ActivitySelectFriend extends Activity{
          */
         if(!facebook.isSessionValid()) {
 
-            facebook.authorize(this, new String[] {}, new DialogListener() {
+            facebook.authorize(this, new String[] {"publish_stream", "email", "user_about_me", "friends_about_me", "user_interests", "friends_interests", "user_likes", "friends_likes"}, new DialogListener() {
                 @Override
                 public void onComplete(Bundle values) {
                     SharedPreferences.Editor editor = mPrefs.edit();
@@ -364,11 +409,29 @@ public class ActivitySelectFriend extends Activity{
 						dataList = req_otm_data.getUserList(json, dataList, getString(R.string.error_no_friend));
 						
 						arrangeDataList();
+					}else if(response != null && response.getStatusLine().getStatusCode() == HttpStatus.SC_BAD_REQUEST){
+						//友人数が多すぎる人でかつ3G用
+						//urlをバラかして50人ずつ取得
+						json = null;
+						int friends_num = (int) Math.floor(dataList.size() / 50);
+						int mod = dataList.size() % 50;
+						for(int i = 0; i < friends_num + 1; i++){
+							String fixed_url = null;
+							if(i < friends_num){
+								fixed_url = req_otm_data.getUserListRequestUrlLimitedNumber(dataList, 0, 50);
+							}else{
+								fixed_url = req_otm_data.getUserListRequestUrlLimitedNumber(dataList, 0, mod);
+							}
+							doOtomagicUserRequestSeveralTimes(fixed_url);
+						}
+						dataList = null;
+						dataList = tmpDataList;
+						arrangeDataList();
 					}else{
 						//正常に受信できなかった場合
 						prog.dismiss();
 	                    handler.sendEmptyMessage(0);
-	                    Log.e("OTM",response.getStatusLine().toString());
+	                    Log.e("OTM",String.valueOf(response.getStatusLine().getStatusCode()));
 					}
 					return null;
 				}
@@ -392,6 +455,64 @@ public class ActivitySelectFriend extends Activity{
 	 
 	        }.start(); 
 	    }
+		
+		//OTOMAGICサーバにユーザーを問い合わせる(3Gで友人数が多い人)
+		private void doOtomagicUserRequestSeveralTimes(final String url) {
+			json = null;
+			final ResponseHandler<String> response = new ResponseHandler<String>(){
+				@Override
+				public String handleResponse(HttpResponse response) throws ClientProtocolException, IOException {
+					// TODO Auto-generated method stub
+					if (response != null && response.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
+					//正常に受信できた場合
+					entity  =  response.getEntity();
+					//InputStream in = entity.getContent();
+					
+					try{
+						json = EntityUtils.toString(entity);
+					}catch (ParseException e){
+						Log.e("ERROR", "ParseException");
+					}finally {
+					    try {
+					    	entity.consumeContent();
+					    }
+					    catch (IOException e) {
+					    //例外処理
+					    }
+					}
+					client.getConnectionManager().shutdown();
+					tmpDataList_ = null;
+					tmpDataList_ = new ArrayList<Friend>();
+					tmpDataList_ = req_otm_data.getUserList(json, tmpDataList_, getString(R.string.error_no_friend));
+					tmpDataList = tmpDataList_;
+					}else{
+						//正常に受信できなかった場合
+						prog.dismiss();
+			            handler.sendEmptyMessage(0);
+			            Log.e("OTM:","doOtomagicUserRequestSeveralTimesError:" + String.valueOf(response.getStatusLine().getStatusCode()));
+					}
+						return null;
+				}
+			 
+			};
+			 
+			// 通信の実行
+			new Thread() {
+				public void run() {
+					try{
+						client = new DefaultHttpClient();
+			            HttpGet httpMethod       = new HttpGet(url);
+			            client.execute(httpMethod,response);
+			        }catch (Exception e) {
+			            Log.e("ERROR", e.toString());
+			            prog.dismiss();
+			            handler.sendEmptyMessage(0);
+			        }
+			        //client.getConnectionManager().shutdown();
+			    }
+			 
+			}.start(); 
+		}
 		
 		private void arrangeDataList(){
 			//アルファベット順でソート
