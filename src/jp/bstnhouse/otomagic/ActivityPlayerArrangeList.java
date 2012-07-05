@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -40,6 +43,9 @@ public class ActivityPlayerArrangeList extends ListActivity{
 	private SQLiteDatabase db;
 	private SQLitePlaylistOpenHelper helper2;
 	String sql = "";
+	private AlertDialog.Builder alertDialog;
+	// 表示項目の配列
+    final CharSequence[] colors = { "一番上へ移動（次の曲として予約）", "BLUE", "YELLOW" };
 	private ProgressDialog prog;
 	
 	static List<PlayList> playList = new ArrayList<PlayList>();
@@ -51,10 +57,10 @@ public class ActivityPlayerArrangeList extends ListActivity{
         setContentView(R.layout.player_arrangelist);
         
         getPlaylist();
-        
-        array.add("A");
-        array.add("B");
-        array.add("C");
+        // TODO Auto-generated method stub
+		alertDialog = new AlertDialog.Builder(this);
+        // タイトルを設定
+        alertDialog.setTitle("タイトル");
         
         TouchListView tlv = (TouchListView) getListView();
         adapter = new IconicAdapter();
@@ -152,6 +158,7 @@ public class ActivityPlayerArrangeList extends ListActivity{
  
         public View getView(int position, View convertView,
                 ViewGroup parent) {
+        	final int p = position;
             View row = convertView;
  
             if (row == null) {
@@ -162,9 +169,39 @@ public class ActivityPlayerArrangeList extends ListActivity{
  
             TextView song_label = (TextView) row.findViewById(R.id.song_label);
             TextView artist_label = (TextView) row.findViewById(R.id.artist_label);
- 
+            
             song_label.setText(trackNamesArray.get(position));
             artist_label.setText(artistNamesArray.get(position));
+            
+            song_label.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+			        // 表示項目とリスナの設定
+			        alertDialog.setItems(colors,
+			                new OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									// TODO Auto-generated method stub
+									switch (which) {
+									case 0:
+										//ArrayListの処理
+										String item = adapter.getItem(p);
+										String item2 = artistNamesArray.get(p);
+										trackNamesArray.remove(p);
+							            trackNamesArray.add(0, item);
+							            artistNamesArray.remove(p);
+							            artistNamesArray.add(0, item2);
+							            //UIのListview行の処理
+							            adapter.remove(item);
+							            adapter.insert(item, 0);
+										break;
+									}
+								}
+			                });
+			        alertDialog.show();
+				}
+			});
+            
             return (row);
         }
     }

@@ -16,8 +16,9 @@
     <string name="error_over_check">友達は４人まで選ぶことができます。</string>
     <string name="user_like">のお気に入り！</string>
     <string name="see_on_itunes">iTunesでこの曲をみる</string>
+    <string name="arrange_playlist">プレイリストを見る</string>
     <string name="arrangelist_load">プレイリストを作成中。。。</string>
-    <string name="arrangelist_title">次の曲以降のスケジュール</string>
+    <string name="arrangelist_title">次の曲以降のスケジュール\nドラッグ＆ドロップで曲順をカスタムできます。曲名をタップすると一番上に移動させることができます。</string>
     <string name="warn_title">確認</string>
     <string name="ask_finish">再生を終了しますか？</string>
     <string name="home">ホーム</string>

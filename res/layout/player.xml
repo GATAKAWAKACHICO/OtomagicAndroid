@@ -136,12 +136,16 @@
                         android:text="@string/see_on_itunes"
                         android:textColor="#000000" />
                 </RelativeLayout>
-
-                <Button
+				<!-- 
+				<Button
                     android:id="@+id/arrange_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="arrange playlist" />
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/arrange_playlist" />
+				 -->
+
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -83,6 +83,7 @@ public class ActivityOtmPlayer extends Activity implements OnClickListener{
 	private HttpEntity entity;
 	private MediaPlayer mp;
 	private String preview_url;
+	private boolean arrange_mode = false;
 	
 	static List<Friend> checkedDataList = new ArrayList<Friend>();
 	static List<UserArtist> UADataList = new ArrayList<UserArtist>();
@@ -118,8 +119,8 @@ public class ActivityOtmPlayer extends Activity implements OnClickListener{
         play_stop_btn.setOnClickListener(this);
         see_itunes_btn = (Button) findViewById(R.id.see_itunes_button);
         see_itunes_btn.setOnClickListener(this);
-        arrange_btn = (Button) findViewById(R.id.arrange_button);
-        arrange_btn.setOnClickListener(this);
+        //arrange_btn = (Button) findViewById(R.id.arrange_button);
+        //arrange_btn.setOnClickListener(this);
         
         //admobの読み込み
         adView = new AdView(this, AdSize.BANNER, otm_admob.getOtomagicAdmobId());
@@ -234,12 +235,16 @@ public class ActivityOtmPlayer extends Activity implements OnClickListener{
         	startActivity(i);
         	//Log.d("itunes","browser launch.");
         	break;
+        /* プレイリストの整理用
         case R.id.arrange_button:
         	if(mp.isPlaying()){
         		mp.pause();
         		play_stop_btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.play_btn_normal));
         	}
+        	arrange_mode = true;
         	savePlayListToDB();
+        	break;
+        */
         }
 	}
 	

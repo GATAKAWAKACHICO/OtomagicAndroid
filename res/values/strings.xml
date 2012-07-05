@@ -16,8 +16,9 @@
     <string name="error_over_check">You can choose within four friend.</string>
     <string name="user_like">" likes this."</string>
     <string name="see_on_itunes">See this song on itunes.</string>
-    <string name="arrangelist_load">Loading PlayList...</string>
-    <string name="arrangelist_title">Scheduled next songs</string>
+    <string name="arrange_playlist">Arrange playlist</string>
+    <string name="arrangelist_load">Loading Playlist...</string>
+    <string name="arrangelist_title">Schedule next songs.\nYou can Drag and Drop or tap song name to create Playlist.</string>
     <string name="warn_title">Confirm</string>
     <string name="ask_finish">Do you really want to quit?</string>
     <string name="home">Home</string>

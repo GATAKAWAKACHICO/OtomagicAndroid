@@ -115,10 +115,9 @@ containing a value of this type.
         public static final int ImageViewZoomInLayoutCloseButton=0x7f040007;
         public static final int InformationLayout=0x7f04001b;
         public static final int ToolLayout=0x7f040024;
-        public static final int arrangeListviewtitle=0x7f040028;
-        public static final int arrange_button=0x7f040027;
+        public static final int arrangeListviewtitle=0x7f040027;
         public static final int artistNameTextView=0x7f04001c;
-        public static final int artist_label=0x7f04002b;
+        public static final int artist_label=0x7f04002a;
         public static final int back_button=0x7f040021;
         public static final int controllerLayout=0x7f04001f;
         public static final int discImageView=0x7f04001a;
@@ -126,7 +125,7 @@ containing a value of this type.
         public static final int facebookImageView2=0x7f04000f;
         public static final int facebookImageView3=0x7f040011;
         public static final int fling=0x7f040001;
-        public static final int friendListView=0x7f04002d;
+        public static final int friendListView=0x7f04002c;
         public static final int friendSelectCheckBox=0x7f040015;
         public static final int friend_name=0x7f040016;
         public static final int horizontalScrollView1=0x7f040008;
@@ -137,16 +136,16 @@ containing a value of this type.
         public static final int howtoIntroTextView=0x7f04000c;
         public static final int howtoScrollView1=0x7f04000b;
         public static final int howtoTitle=0x7f040005;
-        public static final int icon=0x7f040029;
+        public static final int icon=0x7f040028;
         public static final int imageView1=0x7f040017;
         public static final int imageViewZoomin=0x7f04000a;
         public static final int likeUserNameTextView=0x7f04001e;
         public static final int next_button=0x7f040022;
         public static final int none=0x7f040000;
-        public static final int play_button=0x7f04002e;
+        public static final int play_button=0x7f04002d;
         public static final int play_stop_button=0x7f040023;
         public static final int profile_img=0x7f040014;
-        public static final int profile_img_sub=0x7f04002c;
+        public static final int profile_img_sub=0x7f04002b;
         public static final int relativeLayout1=0x7f040020;
         public static final int scrollView1=0x7f040009;
         public static final int see_itunes_button=0x7f040025;
@@ -155,7 +154,7 @@ containing a value of this type.
         public static final int slideLeft=0x7f040004;
         public static final int slideRight=0x7f040003;
         public static final int songTitleTextView=0x7f04001d;
-        public static final int song_label=0x7f04002a;
+        public static final int song_label=0x7f040029;
         public static final int start_button=0x7f040018;
     }
     public static final class layout {
@@ -174,12 +173,13 @@ containing a value of this type.
     }
     public static final class string {
         public static final int app_name=0x7f050001;
-        public static final int arrangelist_load=0x7f050010;
-        public static final int arrangelist_title=0x7f050011;
-        public static final int ask_finish=0x7f050013;
-        public static final int config=0x7f05001b;
-        public static final int config_background=0x7f05001c;
-        public static final int config_reflect_ask=0x7f05001d;
+        public static final int arrange_playlist=0x7f050010;
+        public static final int arrangelist_load=0x7f050011;
+        public static final int arrangelist_title=0x7f050012;
+        public static final int ask_finish=0x7f050014;
+        public static final int config=0x7f05001c;
+        public static final int config_background=0x7f05001d;
+        public static final int config_reflect_ask=0x7f05001e;
         public static final int country=0x7f050002;
         public static final int data_loading=0x7f050006;
         public static final int data_loading_music=0x7f050008;
@@ -192,17 +192,17 @@ containing a value of this type.
         public static final int error_over_check=0x7f05000d;
         public static final int error_title=0x7f050009;
         public static final int hello=0x7f050000;
-        public static final int home=0x7f050014;
-        public static final int howto=0x7f050015;
-        public static final int howto_conclusion=0x7f05001a;
-        public static final int howto_explanation1=0x7f050017;
-        public static final int howto_explanation2=0x7f050018;
-        public static final int howto_explanation3=0x7f050019;
-        public static final int howto_introduction=0x7f050016;
+        public static final int home=0x7f050015;
+        public static final int howto=0x7f050016;
+        public static final int howto_conclusion=0x7f05001b;
+        public static final int howto_explanation1=0x7f050018;
+        public static final int howto_explanation2=0x7f050019;
+        public static final int howto_explanation3=0x7f05001a;
+        public static final int howto_introduction=0x7f050017;
         public static final int see_on_itunes=0x7f05000f;
         public static final int user_like=0x7f05000e;
         public static final int warn_login_with_facebook=0x7f050003;
-        public static final int warn_title=0x7f050012;
+        public static final int warn_title=0x7f050013;
     }
     public static final class style {
         public static final int common=0x7f060000;
